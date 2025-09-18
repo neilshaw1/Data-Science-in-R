@@ -1,0 +1,72 @@
+# Assignment 3
+
+## Exercise 3.2.4
+
+### Setup:
+
+```{r}
+library(tidyverse)
+
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy))
+
+# Template:
+# ggplot(data = <DATA>) + <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+### Exercise 1
+
+Run **ggplot(data = mpg)**. What do you see?
+
+```{r, results="hide"}
+ggplot(data = mpg)
+```
+
+<span style="color: blue;">I see nothing! Just a blank gray screen<span>
+
+### Exercise 2
+
+How many rows are in **mpg**? How many columns?
+
+```{r}
+cat("There are", nrow(mpg), "rows in mpg.")
+cat("There are", ncol(mpg), "columns in mpg.")
+```
+
+### Exercise 3
+
+What does the **drv** variable describe? Read the help for **?mpg** to find out.
+
+<span style="color: blue;">I looked at the ?mpg, and I found out that the drv variable describes the type of drive train, where f = front-wheel drive, r = rear wheel drive, 4 = 4 wheel drive<span>
+
+### Exercise 4
+
+Make a scatterplot of **hwy** vs **cyl**.
+
+```{r}
+ggplot(data=mpg) + geom_point(mapping=aes(x=cyl, y=hwy))
+```
+
+### Exercise 5
+
+What happens if you make a scatterplot of **class** vs **drv**? Why is the plot not useful?
+
+```{r}
+ggplot(data=mpg) + geom_point(mapping=aes(x=drv, y=class))
+```
+
+<span style="color: blue;">If you make a plot of class vs drv, it is useless. This is because both of those variables are categorical and not quantitative. drv literally has letters like f and r inside of it, while class has full on words like compact or suv. You can't graph categorical variables and get a useful graph. Plus, if the points overlap, we can't tell!<span>
+
+<br><br><br><br><br><br>
+
+## Exercise 3.3.1
+
+### Exercise 1
+
+What’s gone wrong with this code? Why are the points not blue? \> ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
+```
+
+<span style="color: blue;">The points weren't blue because the 'color = "blue"' was inside aes(), when it should havve been outside of aes() and inside geom_point(), as that is the parameter we want to modify.<span>

@@ -1,0 +1,33 @@
+```{r}
+mydata <- read.csv("SATGPA.csv")
+
+x <- mydata$VerbalSAT
+y <- mydata$GPA
+
+plot(x, y)
+abline(lm(y ~ x), col = "red", lwd = 2)
+
+cor.test(x, y)
+rand_rs <- as.numeric(0)
+total_tests <- 10000
+percents <- as.numeric(0)
+
+for (i in 1:total_tests){
+    NEWy <- sample(y)
+    rand_rs[i] = cor(x, NEWy)
+}
+
+count = 0
+
+for (i in 1:total_tests){
+    if ((rand_rs[i] > 0.2444543) | (rand_rs[i] < -0.2444543)){
+        count <- count + 1
+    }
+}
+
+
+
+cat("Percent of r's that are > 0.24:", round(100*(count/total_tests), 2), "%")
+
+hist(rand_rs)
+```

@@ -1,0 +1,515 @@
+# Assignment 1
+
+## Exercise 8
+
+This exercise relates to the **College** data set, which can be found in the file **College.csv**. It contains a number of variables for 777 different universities and colleges in the US.
+
+### Excercise 8a:
+
+Use the **read.csv()** function to read the data into **R**. Call the loaded data **college**. Make sure that you have the directory set to the correct location for the data.
+
+```{r}
+setwd("C:/Users/User/Desktop/10th Grade/!SOHS/Data Science")
+college = read.csv("College.csv", header = T)
+```
+
+### Excercise 8b:
+
+Look at the data using the **fix()** function. You should notice that the first column is just the name of each university. We don’t really want **R** to treat this as data. However, it may be handy to have these names for later. Try the following commands:
+
+> rownames(college)=college[,1]\
+> fix(college)
+
+You should see that there is now a **row.names** column with the name of each university recorded. This means that R has given each row a name corresponding to the appropriate university. R will not try to perform calculations on the row names. However, we still need to eliminate the first column in the data where the names are stored. Try:
+
+> college=college[,-1]\
+> fix(college)
+
+Now you should see that the first data column is Private. Note that another column labeled **row.names** now appears before the Private column. However, this is not a data column but rather the name that R is giving to each row.
+
+```{r}
+rownames(college)=college[,1]
+fix(college)
+
+college=college[,-1]
+fix(college)
+```
+
+### Excercise 8c(i):
+
+Use the **summary()** function to produce a numerical summary of the variables in the data set.
+
+```{r}
+summary(college)
+```
+
+### Excercise 8c(ii):
+
+Use the **pairs()** function to produce a scatterplot matrix of the first ten columns or variables of the data. Recall that you can reference the first ten columns of a matrix **A** using **A[,1:10]**.
+
+```{r}
+pairs(college[,2:11])
+```
+
+### Excercise 8c(iii):
+
+Use the **plot()** function to produce side-by-side boxplots of **Outstate** versus **Private**.
+
+```{r}
+plot(College$Private, College$Outstate)
+```
+
+### Excercise 8c(iv):
+
+Create a new qualitative variable, called **Elite**,by binning the **Top10perc** variable. We are going to divide universities into two groups based on whether or not the proportion of students coming from the top 10% of their high school classes exceeds 50%.
+
+> Elite=rep("No",nrow(college))\
+> Elite[college\$Top10perc\>50]="Yes"\
+> Elite=as.factor(Elite)\
+> college=data.frame(college,Elite)
+
+Use the **summary()** function to see how many elite universities there are. Now use the **plot()** function to produce side-by-side boxplots of **Outstate** versus **Elite**.
+
+```{r}
+Elite=rep("No",nrow(college))
+Elite[college$Top10perc>50]="Yes"
+college=data.frame(college,Elite)
+
+summary(Elite)
+
+plot(college$Elite, college$Outstate, xlab = "Elite", ylab = "Outstate", 
+     main = "Out of State Tuition vs Elite Status")
+```
+
+### Excercise 8c(v):
+
+Use the **hist()** function to produce some histograms with differing numbers of bins for a few of the quantitative variables. You may find the command **par(mfrow=c(2,2))** useful: it will divide the print window into four regions so that four plots can be made simultaneously. Modifying the arguments to this function will divide the screen in other ways.
+
+```{r}
+par(mfrow = c(2, 2))
+
+hist(college$Apps, breaks = 20, main = "Applications", col = "lightblue")
+hist(college$Accept, breaks = 100, main = "Accepted", col = "lightgreen")
+hist(college$Enroll, breaks = 15, main = "Enrolled", col = "lightpink")
+hist(college$Outstate, breaks = 22, main = "Out-of-State Tuition", 
+     col = "lightgray")
+```
+
+### Excercise 8c(vi):
+
+Continue exploring the data, and provide a brief summary of what you discover.
+
+```{r}
+par(pty = "s")
+options(repr.plot.width = 15, repr.plot.height = 15)
+#I found the above two lines of code on stack overflow. Again, this is just 
+#formatting so I can see the graphs better, so I think it's ok.
+
+pairs(college[, 2:18])
+
+for (i in 2:17) {
+  for (j in (i+1):18) {
+    r = cor(college[[i]], college[[j]])
+    r_squared = r^2
+
+    if (abs(r_squared) > 0.7) {
+      cat("Columns:", names(college)[i], "and", names(college)[j], "- R^2:", 
+          r_squared, "\n")
+    }
+  }
+}
+
+#The code prints outs the two predictors that are somewhat strongly linearly 
+#correlated
+```
+
+<br><br><br><br><br><br><br><br>
+
+## Exercise 9
+
+This exercise involves the **Auto** data set studied in the lab. Make sure that the missing values have been removed from the data.
+
+### Excercise 9a:
+
+Which of the predictors are quantitative, and which are qualitative?
+
+```{r}
+#The mpg, cylinders, displacement, horsepower, weight, acceleration, and year are 
+#quantitative. The origin and name are qualitative.
+```
+
+### Excercise 9b:
+
+What is the *range* of each quantitative predictor? You can answer this using the **range()** function
+
+```{r}
+setwd("C:/Users/User/Desktop/10th Grade/!SOHS/Data Science")
+auto = read.csv("Auto.csv", header = T)
+
+print("Mpg:")
+print(range(auto$mpg))
+cat("\n") #I found this handy line of code on stack overflow. It's just for 
+#formatting, though, not actually related to answering the question, so I 
+#think it's fine
+
+print("Cylinders:")
+print(range(auto$cylinders))
+cat("\n")
+
+print("Displacement:")
+print(range(auto$displacement))
+cat("\n")
+
+print("Horsepower:")
+print(range(auto$horsepower))
+cat("\n")
+
+print("Weight:")
+print(range(auto$weight))
+cat("\n")
+
+print("Acceleration:")
+print(range(auto$acceleration))
+```
+
+### Excercise 9c:
+
+What is the mean and standard deviation of each quantitative predictor?
+
+```{r}
+print("Mpg:")
+print(mean(auto$mpg))
+print(sd(auto$mpg))
+cat("\n")
+
+print("Cylinders:")
+print(mean(auto$cylinders))
+print(sd(auto$cylinders))
+cat("\n")
+
+print("Displacement:")
+print(mean(auto$displacement))
+print(sd(auto$displacement))
+cat("\n")
+
+print("Horsepower:")
+print(mean(auto$horsepower))
+print(sd(auto$horsepower))
+cat("\n")
+
+print("Weight:")
+print(mean(auto$weight))
+print(sd(auto$weight))
+cat("\n")
+
+print("Acceleration:")
+print(mean(auto$acceleration))
+print(sd(auto$acceleration))
+```
+
+### Excercise 9d:
+
+Now remove the 10th through 85th observations. What is the range, mean, and standard deviation of each predictor in the subset of the data that remains?
+
+```{r}
+new_auto = auto[-(10:85),]
+print("Mpg:")
+print(mean(new_auto$mpg))
+print(sd(new_auto$mpg))
+cat("\n")
+
+print("Cylinders:")
+print(mean(new_auto$cylinders))
+print(sd(new_auto$cylinders))
+cat("\n")
+
+print("Displacement:")
+print(mean(new_auto$displacement))
+print(sd(new_auto$displacement))
+cat("\n")
+
+print("Horsepower:")
+print(mean(new_auto$horsepower))
+print(sd(new_auto$horsepower))
+cat("\n")
+
+print("Weight:")
+print(mean(new_auto$weight))
+print(sd(new_auto$weight))
+cat("\n")
+
+print("Acceleration:")
+print(mean(new_auto$acceleration))
+print(sd(auto$acceleration))
+```
+
+### Excercise 9e:
+
+Using the full data set, investigate the predictors graphically, using scatterplots or other tools of your choice. Create some plots highlighting the relationships among the predictors. Comment on your findings.
+
+```{r}
+pairs(auto[,0:8])
+
+#As horsepower increases, weight and displacement increases linearly. mpg seems to 
+#have an exponentially decreasing relationship with horsepower. As mpg increases, 
+#displacement, horsepower, and weight all decrease. As the year increases, the mpg 
+#of the cars seem to increase, but it's a generally weak positive linear correlation.
+```
+
+### Excercise 9f:
+
+Suppose that we wish to predict gas mileage (**mpg**) on the basis of the other variables. Do your plots suggest that any of the other variables might be useful in predicting **mpg**? Justify your answer.
+
+```{r}
+#Yes, my plots suggest that cylinders, displacement, horsepower, weight, and year 
+#could be useful in predicting mpg.
+```
+
+<br><br><br><br><br><br><br><br>
+
+## Exercise 10
+
+This exercise involves the **Boston** housing data set.
+
+### Excercise 10a:
+
+To begin, load in the **Boston** data set. The **Boston** data set is part of the **MASS** *library* in R.
+
+> library(MASS)
+
+Now the data set is contained in the object Boston.\
+\> Boston
+
+Read about the data set:\
+\> ?Boston
+
+How many rows are in this data set? How many columns? What do the rows and columns represent?
+
+```{r}
+library(MASS)
+Boston
+?Boston
+#506 rows, 14 columns. Rows represent different suburbs or Boston. Columns 
+#represent a wide variety of different thigns, all outlined in the Format 
+#section below in the outpud.
+```
+
+### Excercise 10b:
+
+Make some pairwise scatterplots of the predictors (columns) in this data set. Describe your findings.
+
+```{r}
+pairs(Boston[,1:14])
+#There is a strong expoenential negative correlation between nirogen oxides 
+#concentration and weighted mean of distances to 5 Boston exployment centers
+```
+
+### Excercise 10c:
+
+Are any of the predictors associated with per capita crime rate? If so, explain the relationship.
+
+```{r}
+plot(Boston$zn, Boston$crim)
+plot(Boston$indus, Boston$crim)
+plot(Boston$chas, Boston$crim)
+plot(Boston$nox, Boston$crim)
+plot(Boston$rm, Boston$crim)
+plot(Boston$age, Boston$crim)
+plot(Boston$dis, Boston$crim)
+plot(Boston$rad, Boston$crim)
+plot(Boston$tax, Boston$crim)
+plot(Boston$ptratio, Boston$crim)
+plot(Boston$black, Boston$crim)
+plot(Boston$lstat, Boston$crim)
+plot(Boston$medv, Boston$crim)
+plot(Boston$crim, Boston$crim)
+
+#From the graphs above, it doesn't seem like anything is associated with per capita 
+#crime rate except the  weighted mean of distances to five Boston employment 
+#centres. That has a decreasing exponential correlation with per capita crim rate 
+```
+
+### Excercise 10d:
+
+Do any of the suburbs of Boston appear to have particularly high crime rates? Tax rates? Pupil-teacher ratios? Comment on the range of each predictor.
+
+```{r}
+par(mfrow = c(4, 4))
+
+boxplot(Boston$crim, main = "crim")
+boxplot(Boston$zn, main = "zn")
+boxplot(Boston$indus, main = "indus")
+boxplot(Boston$chas, main = "chas")
+boxplot(Boston$nox, main = "nox")
+boxplot(Boston$rm, main = "rm")
+boxplot(Boston$age, main = "age")
+boxplot(Boston$dis, main = "dis")
+boxplot(Boston$rad, main = "rad")
+boxplot(Boston$tax, main = "tax")
+boxplot(Boston$ptratio, main = "ptratio")
+boxplot(Boston$black, main = "black")
+boxplot(Boston$lstat, main = "lstat")
+
+print("RANGES:")
+
+print("crim:")
+print(range(Boston$crim))
+cat("\n")
+
+print("zn:")
+print(range(Boston$zn))
+cat("\n")
+
+
+print("indus:")
+print(range(Boston$indus))
+cat("\n")
+
+
+print("chas:")
+print(range(Boston$chas))
+cat("\n")
+
+
+print("nox:")
+print(range(Boston$nox))
+cat("\n")
+
+
+print("rm:")
+print(range(Boston$rm))
+cat("\n")
+
+
+print("age:")
+print(range(Boston$age))
+cat("\n")
+
+
+print("dis:")
+print(range(Boston$dis))
+cat("\n")
+
+
+print("rad:")
+print(range(Boston$rad))
+cat("\n")
+
+
+print("tax:")
+print(range(Boston$tax))
+cat("\n")
+
+
+print("ptratio:")
+print(range(Boston$ptratio))
+cat("\n")
+
+
+print("black:")
+print(range(Boston$black))
+cat("\n")
+
+
+print("lstat:")
+print(range(Boston$lstat))
+cat("\n")
+
+
+#All the dots in the bar graphs are the outliers. So yes, there are 
+#certain suburbs that have a really high or low amount of a certain 
+#predictor.
+```
+
+### Excercise 10e:
+
+How many of the suburbs in this data set bound the Charles river?
+
+```{r}
+sum(Boston$chas == 1)
+```
+
+### Excercise 10f:
+
+What is the median pupil-teacher ratio among the towns in this data set?
+
+```{r}
+median(Boston$ptratio)
+```
+
+### Excercise 10g:
+
+Which suburb of Boston has lowest median value of owneroccupied homes? What are the values of the other predictors for that suburb, and how do those values compare to the overall ranges for those predictors? Comment on your findings.
+
+```{r}
+Boston[which.min(Boston$medv), ]
+#Suburb 399 has the lowest median value of owneroccupied homes
+summary(Boston)
+
+#The crim of 38.35 is pretty high. It's above the 3rd quartile overall.
+#The zn of 0 is pretty normal. It is the median overall.
+#The indus of 18.1 is pretty high. It is right at the 3rd quartile overall.
+#The chas of 0 is also normal. It is right at the median overall.
+#The nox of 0.693 is pretty high. It is above the 3rd quartile overall.
+#The rm of 5.453 is pretty low. It is below the 1st quartile overall.
+#The age of 100 is high. It is right at the max overall.
+#The dis of 1.49 is pretty low. It is below the 1st quartile overall.
+#The rad of 24 is pretty high. It is right at the max overall.
+#The tax of 666 is pretty high. It is right at the 3rd quartile overall.
+#The ptratio of 20.2 is pretty high. It is right at the 3rd quartile overall.
+#The black of 396.9 is pretty high. It is above the 3rd quartile overall.
+#The lstat of 30.59 is pretty high. It is above the 3rd quartile overall.
+#The medv of 5 is pretty low. It is at the minimum overall.
+```
+
+### Excercise 10h:
+
+In this data set, how many of the suburbs average more than seven rooms per dwelling? More than eight rooms per dwelling? Comment on the suburbs that average more than eight rooms per dwelling.
+
+```{r}
+print("# of suburbs that average more than seven rooms per dwelling:")
+sum(Boston$rm > 7)
+
+print("# of suburbs that average more than eight rooms per dwelling:")
+sum(Boston$rm > 8)
+over_eight = Boston[Boston$rm > 8, ]
+
+print("Full Data Set Means:")
+mean(Boston$crim,)
+mean(Boston$zn)
+mean(Boston$indus)
+mean(Boston$chas)
+mean(Boston$nox)
+mean(Boston$rm)
+mean(Boston$age)
+mean(Boston$dis)
+mean(Boston$rad)
+mean(Boston$tax)
+mean(Boston$ptratio)
+mean(Boston$black)
+mean(Boston$lstat)
+cat("\n")
+cat("\n")
+cat("\n")
+print("Over Eight rm Means:")
+mean(over_eight$crim,)
+mean(over_eight$zn)
+mean(over_eight$indus)
+mean(over_eight$chas)
+mean(over_eight$nox)
+mean(over_eight$rm)
+mean(over_eight$age)
+mean(over_eight$dis)
+mean(over_eight$rad)
+mean(over_eight$tax)
+mean(over_eight$ptratio)
+mean(over_eight$black)
+mean(over_eight$lstat)
+
+
+#The average crim in over_eight is lower than in the Boston data set
+#The average zn in over_eight is higher than in the Boston data set
+#The average indus in over_eight is lower than in the Boston data set
+#The average chas in over_eight is higher than in the Boston data set
+#The average nox in over_eight is lower than in the Boston data set
+```
