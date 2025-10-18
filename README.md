@@ -1,2 +1,2 @@
 # Data Science in R
-This repository contains a collection of all the data science projects and practices I have conducted in R. 
+This repository contains a collection of all the data science projects I have conducted in R. I have also included some of my practice notebooks, which I use to get more comfortable with the language and the new statistical methods. Some projects come from the textbook, "An Introduction to Statistical Learning with Applications in R" by Gareth James, Daniela Witten, Trevor Hastie, and Robert Tibshirani. You can view this amazing textbook here: [statlearning.com](https://www.statlearning.com/)
